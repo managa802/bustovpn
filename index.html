@@ -2,33 +2,52 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BustoVPN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BustoVPN — счётчик лохов</title>
     <style>
+        /* ===== БАЗА ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
         }
+
         body {
             background: #0b0e1a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 16px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            transition: background 1s ease;
         }
+
         .app {
             max-width: 400px;
             width: 100%;
             background: #1a2335;
-            padding: 36px 24px 28px;
-            border-radius: 32px;
+            padding: 32px 20px 24px;
+            border-radius: 40px;
             border: 1px solid #2b7aff44;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
             text-align: center;
+            transition: border-color 0.6s ease, box-shadow 0.6s ease, background 0.6s ease;
+            animation: fadeSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== БЭДЖ ===== */
         .badge {
             background: rgba(43, 122, 255, 0.15);
             padding: 6px 18px;
@@ -38,21 +57,86 @@
             display: inline-block;
             border: 1px solid rgba(43, 122, 255, 0.2);
             margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
+        .badge:hover {
+            transform: scale(1.05);
+            background: rgba(43, 122, 255, 0.25);
+        }
+
+        /* ===== ЛОГО ===== */
         h1 {
             font-size: 40px;
-            background: linear-gradient(to right, #f0f7ff, #b6d4ff);
+            background: linear-gradient(135deg, #f0f7ff 0%, #b6d4ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             cursor: pointer;
             margin-bottom: 4px;
+            user-select: none;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        h1:active {
+            transform: scale(0.92);
+        }
+
         .sub {
             color: #8bb8ff;
             font-size: 13px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             opacity: 0.8;
         }
+
+        /* ===== СЧЁТЧИК ЛОХОВ ===== */
+        .loch-counter {
+            background: rgba(255, 107, 107, 0.08);
+            border: 1px solid rgba(255, 107, 107, 0.15);
+            border-radius: 16px;
+            padding: 10px 16px;
+            margin: 8px 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .loch-counter:hover {
+            background: rgba(255, 107, 107, 0.12);
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+        .loch-counter .label {
+            font-size: 13px;
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+        .loch-counter .value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fbbf24;
+            font-variant-numeric: tabular-nums;
+            transition: transform 0.3s ease;
+        }
+        .loch-counter .value.pop {
+            animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.4);
+                color: #ff6b6b;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .loch-counter .emoji {
+            font-size: 20px;
+        }
+
+        /* ===== СТАТИСТИКА ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -61,22 +145,99 @@
         }
         .stat-item {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 14px;
-            padding: 10px 6px;
+            border-radius: 16px;
+            padding: 12px 6px;
             border: 1px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        .stat-item:active {
+            transform: scale(0.94);
         }
         .stat-value {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
             color: #f0f7ff;
+            transition: color 0.3s ease;
+            font-variant-numeric: tabular-nums;
         }
         .stat-label {
+            font-size: 8px;
+            color: #4f6a92;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-top: 4px;
+        }
+
+        /* ===== СКОРОСТЬ ===== */
+        .speed-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 10px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin: 10px 0 14px;
+            flex-wrap: wrap;
+        }
+        .speed-item {
+            text-align: center;
+            flex: 1;
+            min-width: 60px;
+        }
+        .speed-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2ecc71;
+            transition: color 0.4s ease, transform 0.3s ease;
+            font-variant-numeric: tabular-nums;
+        }
+        .speed-label {
             font-size: 8px;
             color: #4f6a92;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             margin-top: 2px;
         }
+
+        /* ===== ПРОМО ===== */
+        .promo {
+            background: rgba(255, 193, 7, 0.05);
+            border: 1px dashed rgba(255, 193, 7, 0.3);
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin: 10px 0 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .promo:hover {
+            background: rgba(255, 193, 7, 0.1);
+            transform: scale(1.02);
+            border-color: #fbbf2466;
+        }
+        .promo:active {
+            transform: scale(0.96);
+        }
+        .promo-code {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fbbf24;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+        }
+        .promo-label {
+            font-size: 10px;
+            color: #6a89bb;
+            margin-top: 2px;
+        }
+
+        /* ===== КНОПКИ ===== */
         .btn {
             display: block;
             width: 100%;
@@ -88,27 +249,58 @@
             font-weight: 600;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
             text-decoration: none;
             background: rgba(255, 255, 255, 0.05);
             color: #c5d9ff;
             border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease,
+                background 0.3s ease,
+                border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            border-radius: 60px;
+        }
+        .btn:active::after {
+            opacity: 1;
+            transition: opacity 0s;
+        }
+
+        .btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
         }
         .btn:active {
-            transform: scale(0.97);
+            transform: scale(0.95);
+            transition-duration: 0.08s;
         }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+
         .btn-blue {
             background: linear-gradient(135deg, #2b7aff, #1a5edb);
-            color: white;
+            color: #fff;
             border: none;
             box-shadow: 0 8px 24px #1a5edb44;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease,
+                background 0.3s ease;
         }
         .btn-blue:hover {
             background: linear-gradient(135deg, #408aff, #2868e5);
+            box-shadow: 0 12px 36px #1a5edb66;
+            transform: scale(1.03);
         }
+
         .btn-gold {
             background: linear-gradient(135deg, #fbbf24, #f59e0b);
             color: #0b0e1a;
@@ -116,7 +308,10 @@
         }
         .btn-gold:hover {
             background: linear-gradient(135deg, #fcd34d, #f59e0b);
+            box-shadow: 0 12px 36px #fbbf2444;
+            transform: scale(1.03);
         }
+
         .btn-red {
             background: rgba(255, 107, 107, 0.12);
             color: #ff6b6b;
@@ -124,7 +319,9 @@
         }
         .btn-red:hover {
             background: rgba(255, 107, 107, 0.2);
+            transform: scale(1.03);
         }
+
         .btn-green {
             background: rgba(46, 204, 113, 0.12);
             color: #2ecc71;
@@ -132,7 +329,9 @@
         }
         .btn-green:hover {
             background: rgba(46, 204, 113, 0.2);
+            transform: scale(1.03);
         }
+
         .btn-purple {
             background: rgba(155, 89, 182, 0.12);
             color: #9b59b6;
@@ -140,7 +339,10 @@
         }
         .btn-purple:hover {
             background: rgba(155, 89, 182, 0.2);
+            transform: scale(1.03);
         }
+
+        /* ===== СТАТУС ===== */
         .status {
             color: #6d8bbd;
             font-size: 12px;
@@ -157,7 +359,8 @@
             background: #2ecc71;
             border-radius: 50%;
             display: inline-block;
-            animation: blink 1.5s infinite;
+            animation: blink 1.5s ease-in-out infinite;
+            transition: background 0.4s ease, box-shadow 0.4s ease;
         }
         @keyframes blink {
             0%,
@@ -165,9 +368,25 @@
                 opacity: 1;
             }
             50% {
-                opacity: 0.3;
+                opacity: 0.25;
             }
         }
+
+        .camera-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2ecc71;
+            margin-right: 3px;
+            animation: blink 0.8s ease-in-out infinite;
+            transition: background 0.4s ease;
+        }
+        .camera-indicator.active {
+            background: #ff6b6b;
+        }
+
+        /* ===== ФУТЕР ===== */
         .footer {
             margin-top: 16px;
             font-size: 11px;
@@ -182,101 +401,202 @@
         .footer .red {
             color: #ff6b6b;
         }
-        .speed-row {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 14px;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            margin: 10px 0 14px;
-            flex-wrap: wrap;
+
+        /* ===== УВЕДОМЛЕНИЯ ===== */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(120px);
+            background: rgba(26, 35, 53, 0.95);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 16px 24px;
+            max-width: 380px;
+            width: 90%;
+            z-index: 10000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+            opacity: 0;
+            text-align: left;
+            color: #f0f7ff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
         }
-        .speed-item {
-            text-align: center;
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
-        .speed-value {
-            font-size: 15px;
-            font-weight: 700;
-            color: #2ecc71;
+        .notification .title {
+            font-size: 13px;
+            font-weight: 600;
         }
-        .speed-label {
-            font-size: 8px;
+        .notification .text {
+            font-size: 12px;
+            color: #b0c9f0;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+        .notification .close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
             color: #4f6a92;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .promo {
-            background: rgba(255, 193, 7, 0.05);
-            border: 1px dashed rgba(255, 193, 7, 0.3);
-            border-radius: 12px;
-            padding: 10px 14px;
-            margin: 10px 0 14px;
+            font-size: 18px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: color 0.2s ease;
         }
-        .promo:hover {
-            background: rgba(255, 193, 7, 0.1);
+        .notification .close:hover {
+            color: #f0f7ff;
         }
-        .promo-code {
-            font-size: 16px;
-            font-weight: 700;
-            color: #fbbf24;
-            letter-spacing: 2px;
-        }
-        .promo-label {
-            font-size: 10px;
-            color: #6a89bb;
-            margin-top: 2px;
-        }
-        .camera-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #2ecc71;
-            margin-right: 3px;
-            animation: blink 0.8s infinite;
-        }
-        .camera-indicator.active {
-            background: #ff6b6b;
-        }
+
+        /* ===== АДАПТИВ ===== */
         @media (max-width: 480px) {
             .app {
-                padding: 28px 18px 22px;
+                padding: 24px 14px 20px;
+                border-radius: 32px;
             }
             h1 {
                 font-size: 34px;
             }
             .btn {
                 font-size: 14px;
-                padding: 12px 14px;
+                padding: 13px 14px;
+                margin: 6px 0;
             }
             .stats-grid {
-                grid-template-columns: 1fr 1fr 1fr;
                 gap: 6px;
+            }
+            .stat-value {
+                font-size: 16px;
+            }
+            .speed-value {
+                font-size: 14px;
+            }
+            .sub {
+                font-size: 12px;
+            }
+            .loch-counter .value {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .app {
+                padding: 16px 10px 16px;
+                border-radius: 28px;
+            }
+            h1 {
+                font-size: 28px;
+            }
+            .btn {
+                font-size: 13px;
+                padding: 11px 10px;
+                margin: 5px 0;
+            }
+            .stats-grid {
+                gap: 4px;
+            }
+            .stat-item {
+                padding: 8px 4px;
+            }
+            .stat-value {
+                font-size: 14px;
+            }
+            .speed-row {
+                gap: 4px;
+                padding: 6px 4px;
+            }
+            .speed-value {
+                font-size: 12px;
+            }
+            .badge {
+                font-size: 10px;
+                padding: 4px 14px;
+            }
+            .promo-code {
+                font-size: 14px;
+            }
+            .loch-counter .value {
+                font-size: 16px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .app {
+                padding: 40px 28px 32px;
+                border-radius: 48px;
+            }
+            h1 {
+                font-size: 48px;
+            }
+            .btn {
+                font-size: 17px;
+                padding: 18px 24px;
+                margin: 10px 0;
+            }
+            .stat-value {
+                font-size: 22px;
+            }
+            .speed-value {
+                font-size: 20px;
+            }
+            .loch-counter .value {
+                font-size: 28px;
+            }
+        }
+
+        @media (hover: hover) {
+            .btn:hover {
+                transform: scale(1.03);
+            }
+        }
+        @media (hover: none) {
+            .btn:hover {
+                transform: none;
+            }
+            .stat-item:hover {
+                transform: none;
+            }
+            .promo:hover {
+                transform: none;
+            }
+            .badge:hover {
+                transform: none;
+            }
+            .loch-counter:hover {
+                transform: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="app">
-        <div class="badge">⚡ 30 ФИЧ</div>
+    <div class="app" id="app">
+        <div class="badge" id="badge">⚡ 31 ФИЧА</div>
         <h1 id="logoClick">🛡️ BustoVPN</h1>
         <div class="sub">Защита данных с 2018</div>
 
+        <!-- СЧЁТЧИК ЛОХОВ -->
+        <div class="loch-counter" id="lochCounter">
+            <span class="emoji">🤡</span>
+            <span class="label">Повелось лохов:</span>
+            <span class="value" id="lochCount">0</span>
+        </div>
+
         <!-- СТАТИСТИКА -->
         <div class="stats-grid">
-            <div class="stat-item">
+            <div class="stat-item" data-stat="users">
                 <div class="stat-value" id="usersCount">1 247</div>
                 <div class="stat-label">🌍 Онлайн</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" data-stat="threats">
                 <div class="stat-value" id="threatsCount">12 847</div>
                 <div class="stat-label">🛡️ Угроз</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" data-stat="sessions">
                 <div class="stat-value" id="sessionsCount">3 421</div>
                 <div class="stat-label">🔒 Сессий</div>
             </div>
@@ -298,87 +618,156 @@
             </div>
         </div>
 
-        <!-- ПРОМО-КОД -->
-        <div class="promo" onclick="promoClick()">
+        <!-- ПРОМО -->
+        <div class="promo" id="promoBox">
             <div class="promo-code">🎁 BUSTO2026</div>
             <div class="promo-label">Нажми → +30 дней бесплатно!</div>
         </div>
 
         <!-- КНОПКИ -->
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-blue">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-blue" id="downloadBtn">
             ⬇️ Скачать BustoVPN
         </a>
 
-        <button class="btn" onclick="showReviews()">
-            ⭐ Отзывы
-        </button>
-
-        <button class="btn" onclick="showWriteReview()">
-            ✏️ Оставить отзыв
-        </button>
-
-        <button class="btn btn-gold" onclick="godMode()">
-            👑 Режим Бога
-        </button>
-
-        <button class="btn btn-green" onclick="turboMode()">
-            ⚡ Турбо-режим
-        </button>
-
-        <button class="btn btn-purple" onclick="checkIP()">
-            🌍 Проверить IP
-        </button>
-
-        <button class="btn btn-red" onclick="selfDestruct()">
-            💀 Самоуничтожение
-        </button>
+        <button class="btn" id="reviewsBtn">⭐ Отзывы</button>
+        <button class="btn" id="writeReviewBtn">✏️ Оставить отзыв</button>
+        <button class="btn btn-gold" id="godModeBtn">👑 Режим Бога</button>
+        <button class="btn btn-green" id="turboBtn">⚡ Турбо-режим</button>
+        <button class="btn btn-purple" id="checkIPBtn">🌍 Проверить IP</button>
+        <button class="btn btn-red" id="selfDestructBtn">💀 Самоуничтожение</button>
 
         <!-- СТАТУС -->
         <div class="status">
-            <span class="dot"></span>
+            <span class="dot" id="statusDot"></span>
             <span id="statusText">Защищено</span>
             <span>•</span>
             <span id="userIP">185.42.22.104</span>
-            <span style="margin-left:6px;font-size:10px;color:#4f6a92;">
+            <span style="margin-left:6px; font-size:10px; color:#4f6a92;">
                 🎥 <span class="camera-indicator" id="cameraIndicator"></span>
                 🎤 <span class="camera-indicator" id="micIndicator"></span>
             </span>
         </div>
 
         <div class="footer">
-            <span>⚡</span> BustoVPN v5.0 • <span>∞</span> трафик
-            <br>
+            <span>⚡</span> BustoVPN v5.1 • <span>∞</span> трафик
+            <br />
             🔥 Сделано <span class="gold">Амирчиком</span>
-            <br>
+            <br />
             🐶 Его друг <span class="red">Данил — лох!</span> 🤣
-            <br>
-            <span style="font-size:9px;color:#2a3d60;" id="updateText">✅ Обновление: завершено</span>
+            <br />
+            <span style="font-size:9px; color:#2a3d60;" id="updateText">✅ Обновление: завершено</span>
         </div>
     </div>
 
-    <script>
-        // ========== 30 ФИЧ ==========
+    <div id="notificationContainer"></div>
 
-        // 1-3. Счётчики
+    <script>
+        // ==========================================
+        // СЧЁТЧИК ЛОХОВ (СОХРАНЯЕТСЯ В localStorage)
+        // ==========================================
+
+        const LOCH_KEY = 'bustovpn_loch_count';
+
+        function getLochCount() {
+            try {
+                const val = localStorage.getItem(LOCH_KEY);
+                return val ? parseInt(val) : 0;
+            } catch { return 0; }
+        }
+
+        function setLochCount(val) {
+            try {
+                localStorage.setItem(LOCH_KEY, String(val));
+            } catch {}
+        }
+
+        function incrementLoch() {
+            const el = document.getElementById('lochCount');
+            const current = getLochCount();
+            const newVal = current + 1;
+            setLochCount(newVal);
+            el.textContent = newVal.toLocaleString();
+            el.classList.remove('pop');
+            void el.offsetWidth;
+            el.classList.add('pop');
+            showNotification('🤡 ЕЩЁ ОДИН ЛОХ!', 'Всего лохов: ' + newVal.toLocaleString(), 'error');
+        }
+
+        // Инициализация счётчика
+        document.getElementById('lochCount').textContent = getLochCount().toLocaleString();
+
+        // При клике на счётчик — добавляем +1 (для веселья)
+        document.getElementById('lochCounter').addEventListener('click', function() {
+            incrementLoch();
+        });
+
+        // При клике на "Скачать" — добавляем лоха
+        document.getElementById('downloadBtn').addEventListener('click', function(e) {
+            if (!confirm('⬇️ Скачать BustoVPN v5.1?\n\n(Спойлер: это рикролл 😂)')) {
+                e.preventDefault();
+                return;
+            }
+            // Если подтвердил — считаем лохом
+            incrementLoch();
+        });
+
+        // При загрузке страницы — +1 лох (кто открыл — тот лох!)
+        // Раскомментируй если хочешь, чтобы каждый посетитель считался лохом:
+        // setTimeout(() => {
+        //     incrementLoch();
+        // }, 1000);
+
+        // ==========================================
+        // ОСТАЛЬНЫЕ ФИЧИ (все остальные работают как раньше)
+        // ==========================================
+
+        // ===== 1-3. СЧЁТЧИКИ =====
         let users = 1247,
             threats = 12847,
             sessions = 3421;
-        setInterval(() => {
-            users += Math.floor(Math.random() * 5) + 1;
-            threats += Math.floor(Math.random() * 10) + 1;
-            sessions += Math.floor(Math.random() * 5) + 1;
-            document.getElementById('usersCount').textContent = users.toLocaleString();
-            document.getElementById('threatsCount').textContent = threats.toLocaleString();
-            document.getElementById('sessionsCount').textContent = sessions.toLocaleString();
-        }, 3000);
 
-        // 4-5. Скорость и пинг
-        setInterval(() => {
-            document.getElementById('speedValue').textContent = Math.floor(Math.random() * 150) + 150;
-            document.getElementById('pingValue').textContent = Math.floor(Math.random() * 30) + 5;
-        }, 2000);
+        function animateNumber(el, target, suffix = '') {
+            const current = parseInt(el.textContent.replace(/\s/g, '')) || 0;
+            const diff = target - current;
+            const steps = 20;
+            const step = diff / steps;
+            let i = 0;
+            const interval = setInterval(() => {
+                i++;
+                if (i >= steps) {
+                    el.textContent = target.toLocaleString() + suffix;
+                    clearInterval(interval);
+                    return;
+                }
+                el.textContent = Math.round(current + step * i).toLocaleString() + suffix;
+            }, 40);
+        }
 
-        // 6. Смена IP
+        function updateStats() {
+            const newUsers = users + Math.floor(Math.random() * 5) + 1;
+            const newThreats = threats + Math.floor(Math.random() * 10) + 1;
+            const newSessions = sessions + Math.floor(Math.random() * 5) + 1;
+
+            animateNumber(document.getElementById('usersCount'), newUsers);
+            animateNumber(document.getElementById('threatsCount'), newThreats);
+            animateNumber(document.getElementById('sessionsCount'), newSessions);
+
+            users = newUsers;
+            threats = newThreats;
+            sessions = newSessions;
+        }
+
+        setInterval(updateStats, 3000);
+
+        // ===== 4-5. СКОРОСТЬ =====
+        setInterval(() => {
+            const speed = Math.floor(Math.random() * 150) + 150;
+            const ping = Math.floor(Math.random() * 30) + 5;
+            animateNumber(document.getElementById('speedValue'), speed);
+            animateNumber(document.getElementById('pingValue'), ping);
+        }, 2500);
+
+        // ===== 6. IP =====
         const ips = ['185.42.22.104', '193.124.18.67', '212.42.18.33', '87.250.250.242', '194.67.2.114'];
         let ipIdx = 0;
         setInterval(() => {
@@ -387,60 +776,139 @@
             document.getElementById('ipValue').textContent = ips[ipIdx];
         }, 5000);
 
-        // 7. Промо-код
-        function promoClick() {
-            alert('🎉 Промокод BUSTO2026 активирован! +30 дней бесплатно!\n\n(Шутка, ты просто лох 😂)');
-        }
+        // ===== 7. УВЕДОМЛЕНИЯ =====
+        function showNotification(title, text, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notif = document.createElement('div');
+            notif.className = 'notification show';
+            const colors = {
+                info: '#2b7aff',
+                success: '#2ecc71',
+                warning: '#fbbf24',
+                error: '#ff6b6b',
+                gold: '#fbbf24'
+            };
+            notif.style.borderLeft = `4px solid ${colors[type] || colors.info}`;
+            notif.innerHTML = `
+                    <button class="close">✕</button>
+                    <div class="title">${title}</div>
+                    <div class="text">${text}</div>
+                `;
+            container.appendChild(notif);
 
-        // 8. Отзывы
-        function showReviews() {
-            alert('⭐ Отзывы:\n\n«Хороший впн, включил спотифай и включил яру яру фонк!»\n— Алексей, 5 звёзд');
-        }
+            notif.querySelector('.close').addEventListener('click', () => {
+                notif.classList.remove('show');
+                setTimeout(() => notif.remove(), 500);
+            });
 
-        // 9. Оставить отзыв
-        function showWriteReview() {
-            alert('📝 Напиши свой отзыв!\n\n(Пока без сервера, но мы работаем над этим! 😂)');
-        }
-
-        // 10. Режим Бога
-        function godMode() {
-            alert('👑 РЕЖИМ БОГА АКТИВИРОВАН!\n\nТы теперь Бог BustoVPN!\n(На самом деле ты просто лох 😂)');
-            document.querySelector('.app').style.boxShadow = '0 0 60px #fbbf24, 0 0 120px #fbbf2440';
             setTimeout(() => {
-                document.querySelector('.app').style.boxShadow = '';
+                if (notif.parentNode) {
+                    notif.classList.remove('show');
+                    setTimeout(() => notif.remove(), 500);
+                }
+            }, 5000);
+        }
+
+        // ===== 8. ПРОМО =====
+        document.getElementById('promoBox').addEventListener('click', function() {
+            const codes = ['BUSTO2026', 'VIPFREE', 'AMIRTOP', 'DANILFAG'];
+            const code = codes[Math.floor(Math.random() * codes.length)];
+            showNotification('🎉 Промокод активирован!', `${code} — +30 дней! (шутка, ты лох 😂)`, 'gold');
+            this.querySelector('.promo-code').textContent = `🎁 ${code}`;
+            setTimeout(() => {
+                this.querySelector('.promo-code').textContent = '🎁 BUSTO2026';
             }, 3000);
-        }
+        });
 
-        // 11. Турбо-режим
-        function turboMode() {
-            alert('⚡ ТУРБО-РЕЖИМ АКТИВИРОВАН!\n\nСкорость увеличена на 300%!\n(На самом деле ничего не изменилось 😂)');
-        }
+        // ===== 9. ОТЗЫВЫ =====
+        const reviews = [
+            { name: 'Алексей', text: 'Хороший впн, включил спотифай и включил яру яру фонк!', stars: 5 },
+            { name: 'Мария', text: 'Работает, но иногда тормозит. В целом норм.', stars: 4 },
+            { name: 'Дмитрий', text: 'Лучший VPN! Пользуйтесь и не парьтесь!', stars: 5 },
+            { name: 'Аноним', text: 'Тролль-проект, но выглядит круто 😂', stars: 5 },
+        ];
 
-        // 12. Проверить IP
-        function checkIP() {
-            alert('🌍 Ваш IP: ' + document.getElementById('userIP').textContent + '\n📍 Страна: Германия (DE)\n🛡️ Защита активна');
-        }
+        document.getElementById('reviewsBtn').addEventListener('click', function() {
+            let text = '⭐ ОТЗЫВЫ ПОЛЬЗОВАТЕЛЕЙ ⭐\n\n';
+            reviews.forEach(r => {
+                const stars = '⭐'.repeat(r.stars);
+                text += `— ${r.name}: ${stars}\n  "${r.text}"\n\n`;
+            });
+            text += '📝 Хочешь оставить свой? Нажми "Оставить отзыв"!';
+            alert(text);
+        });
 
-        // 13. Самоуничтожение
-        function selfDestruct() {
-            if (confirm('💀 Ты уверен, что хочешь самоуничтожить BustoVPN?')) {
-                document.getElementById('statusText').textContent = '🔴 Уничтожен';
-                document.querySelector('.dot').style.background = '#ff6b6b';
-                document.querySelector('.dot').style.boxShadow = '0 0 12px #ff6b6b80';
-                alert('💀 BustoVPN самоуничтожился!\n\nПерезагрузи страницу, чтобы воскреснуть');
-                document.body.style.background = '#0000aa';
-                document.body.style.color = 'white';
-                document.querySelector('.app').style.background = '#000088';
-                document.querySelector('.app').style.borderColor = '#ffffff44';
+        // ===== 10. НАПИСАТЬ ОТЗЫВ =====
+        document.getElementById('writeReviewBtn').addEventListener('click', function() {
+            const name = prompt('👤 Введите ваше имя (или оставь пустым):') || 'Аноним';
+            const stars = prompt('⭐ Оцените от 1 до 5:', '5');
+            const text = prompt('📝 Напишите ваш отзыв:');
+            if (text && text.trim()) {
+                const starNum = Math.min(5, Math.max(1, parseInt(stars) || 5));
+                reviews.push({ name, text: text.trim(), stars: starNum });
+                showNotification('✅ Спасибо!', `Твой отзыв добавлен (${name}, ${'⭐'.repeat(starNum)})`, 'success');
+            } else {
+                showNotification('⚠️ Ошибка', 'Текст отзыва не может быть пустым!', 'error');
             }
-        }
+        });
 
-        // 14. Обновление статуса
+        // ===== 11. РЕЖИМ БОГА =====
+        document.getElementById('godModeBtn').addEventListener('click', function() {
+            const app = document.getElementById('app');
+            showNotification('👑 РЕЖИМ БОГА', 'Ты теперь Бог BustoVPN! (на самом деле просто лох 😂)', 'gold');
+            app.style.boxShadow = '0 0 60px #fbbf24, 0 0 120px #fbbf2440';
+            app.style.borderColor = '#fbbf24';
+            setTimeout(() => {
+                app.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.8)';
+                app.style.borderColor = '#2b7aff44';
+            }, 4000);
+        });
+
+        // ===== 12. ТУРБО =====
+        document.getElementById('turboBtn').addEventListener('click', function() {
+            showNotification('⚡ ТУРБО-РЕЖИМ', 'Скорость увеличена на 300%! (ничего не изменилось 😂)', 'success');
+            const speed = document.getElementById('speedValue');
+            const original = speed.textContent;
+            speed.textContent = Math.floor(parseInt(original) * 3);
+            speed.style.color = '#fbbf24';
+            setTimeout(() => {
+                speed.textContent = original;
+                speed.style.color = '';
+            }, 3000);
+        });
+
+        // ===== 13. IP =====
+        document.getElementById('checkIPBtn').addEventListener('click', function() {
+            const ip = document.getElementById('userIP').textContent;
+            const countries = ['🇩🇪 Германия', '🇫🇷 Франция', '🇬🇧 Великобритания', '🇺🇸 США', '🇳🇱 Нидерланды'];
+            const country = countries[Math.floor(Math.random() * countries.length)];
+            alert(`🌍 Ваш IP: ${ip}\n📍 Страна: ${country}\n🛡️ Защита: активна\n🔒 Шифрование: AES-256`);
+        });
+
+        // ===== 14. САМОУНИЧТОЖЕНИЕ =====
+        document.getElementById('selfDestructBtn').addEventListener('click', function() {
+            if (confirm('💀 Ты уверен, что хочешь самоуничтожить BustoVPN?')) {
+                showNotification('💀 САМОУНИЧТОЖЕНИЕ', 'BustoVPN уничтожается...', 'error');
+                document.getElementById('statusText').textContent = '🔴 Уничтожен';
+                document.getElementById('statusDot').style.background = '#ff6b6b';
+                document.getElementById('statusDot').style.boxShadow = '0 0 12px #ff6b6b80';
+
+                setTimeout(() => {
+                    document.body.style.background = '#0000aa';
+                    document.getElementById('app').style.background = '#000088';
+                    document.getElementById('app').style.borderColor = '#ffffff44';
+                    document.getElementById('app').style.boxShadow = '0 0 80px #0000aa';
+                    showNotification('💀 Воскрешение', 'Перезагрузи страницу, чтобы воскреснуть 😂', 'warning');
+                }, 1000);
+            }
+        });
+
+        // ===== 15. СТАТУС =====
         const statuses = ['🟢 Защищено', '🟢 Безопасно', '🟢 Анонимно', '🟡 Подключение', '🟢 Суперзащита'];
         setInterval(() => {
             const status = statuses[Math.floor(Math.random() * statuses.length)];
             document.getElementById('statusText').textContent = status.replace(/[🟢🟡]/g, '').trim();
-            const dot = document.querySelector('.dot');
+            const dot = document.getElementById('statusDot');
             if (status.includes('🟡')) {
                 dot.style.background = '#fbbf24';
                 dot.style.boxShadow = '0 0 12px #fbbf2480';
@@ -453,59 +921,124 @@
             }
         }, 5000);
 
-        // 15-16. Камера/микрофон (фейк)
+        // ===== 16-17. КАМЕРА =====
         setInterval(() => {
             const cam = document.getElementById('cameraIndicator');
             const mic = document.getElementById('micIndicator');
-            cam.className = 'camera-indicator' + (Math.random() > 0.3 ? ' active' : '');
-            mic.className = 'camera-indicator' + (Math.random() > 0.4 ? ' active' : '');
+            const camActive = Math.random() > 0.3;
+            const micActive = Math.random() > 0.4;
+            cam.className = 'camera-indicator' + (camActive ? ' active' : '');
+            mic.className = 'camera-indicator' + (micActive ? ' active' : '');
+            if (camActive && micActive) {
+                document.getElementById('statusText').textContent = '🟡 Подслушивают';
+                document.getElementById('statusDot').style.background = '#ff6b6b';
+            }
         }, 2000);
 
-        // 17. Обновление (фейк)
+        // ===== 18. ОБНОВЛЕНИЕ =====
         const updates = ['✅ Обновление: завершено', '🔄 Проверка обновлений...', '📦 Загрузка v5.1...', '✅ Версия 5.1 установлена'];
         setInterval(() => {
             document.getElementById('updateText').textContent = updates[Math.floor(Math.random() * updates.length)];
         }, 8000);
 
-        // 18. Пасхалка: 5 кликов по заголовку
+        // ===== 19. ПАСХАЛКА =====
         let clickCount = 0;
         document.getElementById('logoClick').addEventListener('click', function() {
             clickCount++;
+            this.style.transform = 'scale(0.92)';
+            setTimeout(() => this.style.transform = '', 250);
+
             if (clickCount >= 5) {
-                alert('🤡 ТЫ ЛОХ!\n\nТы слишком много кликаешь по логотипу, мудила! 😂');
+                showNotification('🤡 ТЫ ЛОХ!', 'Слишком много кликов! Ты лох! 😂', 'error');
                 clickCount = 0;
                 document.body.style.background = '#ff6b6b33';
                 setTimeout(() => document.body.style.background = '#0b0e1a', 1000);
+            } else if (clickCount === 3) {
+                showNotification('🥚 Пасхалка', 'Ещё 2 клика до секрета!', 'warning');
             }
         });
 
-        // 19. Эффект при клике на кнопки (вибрация)
+        // ===== 20. ВИБРАЦИЯ =====
         document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (navigator.vibrate) navigator.vibrate(20);
+            btn.addEventListener('click', function(e) {
+                if (navigator.vibrate) navigator.vibrate(15);
             });
         });
 
-        // 20. Консоль
-        console.log('%c🔥 BustoVPN v5.0 загружен!', 'font-size:22px;color:#fbbf24;font-weight:700;');
+        // ===== 21. КОНСОЛЬ =====
+        console.log('%c🔥 BustoVPN v5.1 загружен!', 'font-size:22px;color:#fbbf24;font-weight:700;');
         console.log('%c❤️ Амирка любит вас!', 'font-size:16px;color:#ff6b6b;');
         console.log('%c🐶 Данил — лох!', 'font-size:16px;color:#ff6b6b;');
         console.log('🎯 Кликни 5 раз по логотипу — пасхалка!');
-        console.log('🔐 2FA нет, но есть промокод BUSTO2026 😂');
+        console.log('🤡 Счётчик лохов: ' + getLochCount().toLocaleString());
 
-        // 21-30: Стилизация и дополнительные эффекты
-        console.log('%c┌─────────────────────────────┐', 'color:#2ecc71;');
-        console.log('%c│  🛡️ BUSTOVPN v5.0          │', 'color:#2ecc71;');
-        console.log('%c│  📊 30 фич загружено       │', 'color:#2ecc71;');
-        console.log('%c│  🔒 Шифрование: AES-256    │', 'color:#2ecc71;');
-        console.log('%c│  🌍 Сервер: Германия (DE)  │', 'color:#2ecc71;');
-        console.log('%c│  ⚡ Скорость: 248 Мбит/с   │', 'color:#2ecc71;');
-        console.log('%c└─────────────────────────────┘', 'color:#2ecc71;');
+        window.showBSOD = function() {
+            showNotification('💀 СИНИЙ ЭКРАН', 'BustoVPN.exe не отвечает 😂', 'error');
+            document.body.style.background = '#0000aa';
+            document.getElementById('app').style.background = '#000088';
+            setTimeout(() => {
+                document.body.style.background = '#0b0e1a';
+                document.getElementById('app').style.background = '#1a2335';
+            }, 3000);
+        };
 
-        // Дополнительный эффект: случайный цвет бордера
+        // ===== 22. БЭДЖ =====
+        document.getElementById('badge').addEventListener('click', function() {
+            const texts = ['⚡ 31 ФИЧА', '🔥 ГОРЯЧО', '💯 ТОП', '🚀 ФОРСАЖ', '🤡 ТРОЛЛЬ'];
+            this.textContent = texts[Math.floor(Math.random() * texts.length)];
+            showNotification('🎯 Бэдж', 'Теперь тут ' + this.textContent, 'gold');
+        });
+
+        // ===== 23. СТАТИСТИКА =====
+        document.querySelectorAll('.stat-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const value = this.querySelector('.stat-value');
+                const num = parseInt(value.textContent.replace(/\s/g, '')) || 0;
+                const added = Math.floor(Math.random() * 100) + 50;
+                animateNumber(value, num + added);
+                showNotification('📊 Статистика', '+' + added + ' к ' + this.querySelector('.stat-label').textContent,
+                    'success');
+            });
+        });
+
+        // ===== 24. СТАТУС =====
+        document.querySelector('.status').addEventListener('click', function() {
+            showNotification('🛡️ Статус', 'Защита активна, угроз нет. Ты в безопасности!', 'success');
+        });
+
+        // ===== 25. ФУТЕР =====
+        document.querySelector('.footer span:nth-child(2)')?.addEventListener('click', function() {
+            showNotification('∞', 'Трафик безлимитный! (на самом деле нет 😂)', 'gold');
+        });
+
+        document.querySelector('.footer').addEventListener('dblclick', function() {
+            showNotification('🤫 Секрет', 'Амирка — красавчик! Данил — лох!', 'error');
+        });
+
+        // ===== 26. ТЕМА =====
+        window.toggleTheme = function() {
+            const app = document.getElementById('app');
+            if (app.style.background === 'rgb(255, 255, 255)') {
+                app.style.background = '#1a2335';
+                app.style.color = '';
+                document.body.style.background = '#0b0e1a';
+                showNotification('🌙 Тёмная тема', 'Вернули классику!', 'info');
+            } else {
+                app.style.background = '#ffffff';
+                app.style.color = '#0b0e1a';
+                document.body.style.background = '#f0f0f0';
+                showNotification('☀️ Светлая тема', 'Глаза болят? Это нормально 😂', 'warning');
+            }
+        };
+        console.log('💡 Введи toggleTheme() чтобы переключить тему');
+
+        // ===== 27. СЕКРЕТ =====
+        console.log('%c🔑 СЕКРЕТНЫЙ КОД: AMIRCHIK2026', 'font-size:18px;color:#fbbf24;font-weight:700;');
+
+        // ===== 28. БОРДЕР =====
         setInterval(() => {
             const colors = ['#2b7aff', '#fbbf24', '#ff6b6b', '#2ecc71', '#9b59b6'];
-            document.querySelector('.app').style.borderColor = colors[Math.floor(Math.random() * colors.length)] + '44';
+            document.getElementById('app').style.borderColor = colors[Math.floor(Math.random() * colors.length)] + '66';
         }, 5000);
     </script>
 </body>
